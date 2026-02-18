@@ -1,8 +1,9 @@
-import ImageKit from "imagekit"
+// import ImageKit from "imagekit"
 import Chat from "../models/chat.js"
 import User from "../models/user.js"
 import axios from 'axios'
 import openai from "../configs/openai.js"
+import imagekit from "../configs/imagekit.js"
 //text based ai chat controller
 export const textMessageController = async (req,res)=>{
     try {
@@ -86,7 +87,7 @@ export const imageMessageController = async (req,res) => {
 
       //upload to imagekit media library
 
-      const uploadResponse = await ImageKit.upload({
+      const uploadResponse = await imagekit.upload({
         file : base64Image,
         fileName : `${Date.now()}.png`,
         folder : "lumi"
