@@ -1,14 +1,43 @@
 import React, { useState } from 'react'
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom'
+
 
 export default function Login() {
+
+    const navigate = useNavigate()
+
 
     const [state, setState] = useState("login");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const {axios, setToken} = useAppContext()
+
     const handleSubmit = async (e)=>{
       e.preventDefault();
+      const isLogin = state === "login"
+      const url = state === "login" ? '/api/user/login' : '/api/user/register'
+      try {
+        const {data} = await axios.post(url, {name, email, password})
+        if(data.token) {
+            setToken(data.token)
+            localStorage.setItem('token',data.token)
+            if(isLogin){
+            toast.success("Login successful")
+        }else{
+            toast.success("Account created successfully")
+        }
+
+        navigate('/')
+        }else{
+            toast.error(data.message ||"Registration failed")
+        }
+      } catch (error) {
+        toast.error(error.message)
+      }
     }
 
     return (
